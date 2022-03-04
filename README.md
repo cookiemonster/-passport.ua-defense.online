@@ -1,4 +1,6 @@
-#passport.ua-defense.online
+#passport.ua-defense.online 
+
+mirror url: https://cookiemonster.github.io/passport.ua-defense.online/
 
 Source: https://zido.com.ua/ukraina/centr-protidii-dezinformacii-pri-rnbo-ukraini-povidomlyae-diversantam-vidali-novi-ukrainski
 
