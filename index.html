@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Провірка паспорта UA-Defence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <script>
+	    if('serviceWorker' in navigator) {
+		    navigator.serviceWorker.register('sw.js', {
+			    scope: '.' // <--- THIS BIT IS REQUIRED
+		    }).then(function(registration) {
+			    // Registration was successful
+			    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+		    }, function(err) {
+			    // registration failed :(
+			    console.log('ServiceWorker registration failed: ', err);
+		    });
+	    }
+
+	    window.addEventListener("beforeinstallprompt", function(e) {
+            console.log('prompt', e);
+	    });
+    </script>
+</head>
+<body>
+<div class="w-screen h-screen bg-gray-200 p-4 flex flex-col">
+    <div class="-mx-4 bg-white text-2xl p-4 font-bold text-center" id="serial">
+        <div id="input">KS-123123123</div>
+    </div>
+    <div id="result" class="h-14 bg-white text-center font-bold mt-4 -mx-4 p-4">
+        <div id="danger">Паспорт в базі!!! Знищити</div>
+    </div>
+    <div class="flex-1">
+        <div class="-mx-4 p-4 grid gap-3 grid-cols-3" id="keyboard">
+            <div class="bg-white rounded text-center font-bold text-2xl p-4">1</div>
+            <div class="bg-white rounded text-center font-bold text-2xl p-4">1</div>
+            <div class="bg-white rounded text-center font-bold text-2xl p-4">1</div>
+            <div class="bg-white rounded text-center font-bold text-2xl p-4">1</div>
+            <div class="bg-white rounded text-center font-bold text-2xl p-4">1</div>
+            <div class="bg-white rounded text-center font-bold text-2xl p-4">1</div>
+            <div class="bg-white rounded text-center font-bold text-2xl p-4">1</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    html, body { margin: 0;padding: 0}
+    * { box-sizing: border-box}
+    .w-screen {
+        width: 100vw;
+    }
+    .h-screen {
+        height: 100vh;
+    }
+    .bg-gray-200 {
+        background: rgba(229, 231, 235, 1);
+    }
+    .p-4 { padding: 1rem; }
+    .flex-col { flex-direction: column;}
+    .flex { display: flex;}
+    .font-bold { font-weight: 700;}
+    .text-2xl { font-size: 1.5rem; line-height: 2rem }
+    .text-center { text-align: center}
+    .bg-white { background: white}
+    .-mx-4 { margin-left: -1rem;margin-right: -1rem;}
+    .h-14 { height: 3.5rem}
+    .mt-4 { margin-top: 1rem;}
+    .flex-1 { flex: 1 1 0%}
+    .gap-3 { gap: 0.75rem}
+    .text-gray-400 { color: rgba(156, 163, 175, 1)}
+    .grid { display: grid;}
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr))}
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr))}
+    .rounded { border-radius: 0.25rem}
+    #result #success,
+    #result #danger {
+        display: none;
+    }
+    #result .active {
+        display: block !important;
+    }
+</style>
+
+<script>
+	var database = {
+		"Паспорт": {
+			"ВК": ['621219', '621220', '621214', '621217', '621218', '446009', '446008', '308353', '855738', '862398', '863947', '859590', '859586', '872030', '855353', '855356', '854512', '852379', '853493', '848461', '694462', '694461', '694463', '694464', '692832', '692834', '692831', '692835', '692833', '634559', '621215'],
+			"ВТ": [['093441','093600'], ['096990','097000'], ['099001','099600'], '005556', '063782'],
+			"ЕТ": ['330184', '369290', '374816', ['403563','403600'], ['406541','406600'], '410174', ['410756','410800'], ['410922', '411000'], ['414161','414200'], ['414975','415000'], ['415190','415200'],['415381','415400'], ['415741','415800'], ['416042','416200'], ['416341','416400'], ['416476','416600'], ['416767','417200'],['417330','417400'], ['417513','417600'],['417771','418200'],['418267','418400'], ['418470','418600'], ['418799','419000'],['419381','419600'], '419853',['419861','420000'],['420044','420200'],['420431','420800'],['420942','421000'],['421061','421415'],['421417','421569'],['421571','421599'],['421601','423054'],['423056','423160'],['423162','423199'], '423201','424200',['424601','424631'],['424633','428900'], '270892','092121','280969','405971', '190800', '270992', '268419', '268500', '268561', '270823', '270865', '271000', '275401', '275543', '276601', '276800', '281824', '281838', '281882', '281894', '289021', '289181', '297003', '297026', '297061', '297084', '297100', '297844', '297853', '297905', '297916', '297924', '297934', '297963', '297976', '298001', '298024', '298034', '298163', '298175', '318437', '318441', '318442', '318465', '318521', '318570', '318600', '320012', '320025', '320042', '320100', '341601', '319184', '410177', '276682', '419790', '248881', '231558', '379405', '248882', '343980', '350170', '343982', '319029', '241109', '350024', '264623', '264617', '140305', '331271', '310183', '335684', '305996', '344851', '410566', '379402', '320171', '419803', '350109', '350110', '369291','320173', '405971', '285304', '285307', '327389', '302786', '315339', '315338', '310196', '319024', '319053', '319026', '285310', '285305', '285306', '285303', '261837', '276773', '261836', '264622', '248869', '194940', '212996', '131800', '173254', '133133', '210551', '248879', '248880', '247827', '140368', '166155', '081966', '121725', '111645', '247828', '210550', '121726', '173255', '163564', '164641', '248878', '111647', '111646', '173785', '177113', '335621', '297098', '139644', '369290'],
+			"СТ": ['080756','201844','201997'],
+			"АР": [['478259','478400'],['478483','478600'], ['478701','478800'],['478836','479000'], ['479001','482400'],['276091','276100'], ['360521','360526'], '374210', '374213', '374214', '376681', '376697', '404785', '388173', ['404791','404793'], '420569', '434245', '434246', '438612', '438613', '439972', '457267', '451964'],
+			"ЕЕ": ['641999']
+		},
+		"Бланк ПП": {
+			"ІН": [['042824','044400'],['044418','045000']]
+		},
+		"Бланк ТП": {
+			"ТР": [['001917','002000'],['067001','069600'], ['012676', '013800']]
+		}
+	};
+
+	function create_tree(database) {
+		var result = {};
+
+		Object.entries(database).forEach(function(entry) {
+			result[entry[0]] = result[entry[0]] || {};
+
+			Object.entries(entry[1]).forEach(function(series) {
+				result[entry[0]][series[0]] = result[entry[0]][series[0]] || {};
+
+				series[1].forEach(function(number) {
+                    if (typeof number === 'string') {
+                        split_number(result[entry[0]][series[0]], number)
+                    }
+
+                    if (Array.isArray(number)) {
+                    	var num1 = parseInt(number[0]);
+                    	var num2 = parseInt(number[1]);
+
+                    	for (var i = num1; i <= num2; i++) {
+		                    split_number(result[entry[0]][series[0]], int_to_series(i))
+                        }
+                    }
+                });
+            })
+        })
+
+        return result;
+    }
+
+    function int_to_series(num) {
+		return num.toString().padStart(6, '0');
+    }
+
+    function split_number(array, number) {
+        if (number.length === 1) {
+        	array[number.splice(0,1)] = true;
+        	return;
+        }
+
+        if (typeof number === 'string') {
+		    number = number.split('');
+        }
+
+        var c = number.splice(0, 1);
+        array[c] = array[c] || {};
+
+        split_number(array[c], number);
+    }
+
+    var tree = create_tree(database);
+
+	var keyboard = document.getElementById('keyboard');
+	var result_success = document.getElementById('success');
+	var result_danger = document.getElementById('danger');
+	var input = document.getElementById('input');
+
+	var tpl_start = '<div class="bg-white rounded text-center font-bold text-2xl p-4">';
+    var tpl_end = '</div>';
+
+	function draw_type() {
+		input.innerHTML = 'Виберіть тип документу';
+		danger.classList.remove('active');
+		keyboard.innerHTML = '';
+		keyboard.classList.remove('grid-cols-3');
+		keyboard.classList.add('grid-cols-1');
+		Object.entries(tree).forEach(function(entry) {
+			keyboard.innerHTML += tpl_start + entry[0] + tpl_end;
+        });
+
+		keyboard.childNodes.forEach(function(node) {
+			node.onclick = function() {
+				draw_series(node.innerHTML);
+				input.innerHTML = node.innerHTML + ': ';
+            }
+        })
+    }
+
+    function draw_series(type) {
+	    keyboard.innerHTML = '';
+	    keyboard.classList.remove('grid-cols-1');
+	    keyboard.classList.add('grid-cols-3');
+
+	    Object.entries(tree[type]).forEach(function(entry) {
+		    keyboard.innerHTML += tpl_start + entry[0] + tpl_end;
+	    });
+	    keyboard.innerHTML += tpl_start + 'Вийти' + tpl_end;
+
+	    keyboard.childNodes.forEach(function(node) {
+		    node.onclick = function() {
+		    	if (tree[type][node.innerHTML]) {
+    			    draw_numbers(tree[type][node.innerHTML], node.innerHTML);
+				    input.innerHTML += node.innerHTML;
+                }else {
+		    		draw_type();
+                }
+		    }
+	    })
+
+
+
+    }
+
+    function draw_numbers(array, series) {
+		if (Object.keys(array).length === 0) {
+			if (array === true) {
+				danger.classList.add('active');
+            }
+        }
+	    keyboard.innerHTML = '';
+	    keyboard.classList.remove('grid-cols-1');
+	    keyboard.classList.add('grid-cols-3');
+
+	    for(var i = 0; i < 10; i++) {
+		    keyboard.innerHTML += tpl_start + i + tpl_end;
+	    }
+	    keyboard.innerHTML += tpl_start + 'Вийти' + tpl_end;
+
+	    keyboard.childNodes.forEach(function(node, i) {
+            if (array[i]) {
+	            node.onclick = function() {
+		            draw_numbers(array[node.innerHTML], series);
+		            input.innerHTML += node.innerHTML;
+	            }
+            } else if (i !== 10) {
+            	node.classList.add('text-gray-400')
+            } else {
+            	node.onclick = draw_type;
+            }
+	    })
+
+    }
+
+    draw_type();
+</script>
+</body>
+</html>
